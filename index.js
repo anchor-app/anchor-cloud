@@ -29,18 +29,9 @@ var api = new ParseServer(
 
 var app = express();
 
-// Serve static assets from the /public folder
-app.use(express.static(path.join(__dirname, '/public')));
-
-
-// Mount your cloud express app
-app.use('/', require('./cloud/main.js').app);
-
-
 // Serve the Parse API on the /parse URL prefix
 var mountPath = process.env.PARSE_MOUNT || '/1';
 app.use(mountPath, api);
-
 
 var httpServer = require('http').createServer(app);
 httpServer.listen(port, function(){ console.log('Running on http://localhost:' + port); });
