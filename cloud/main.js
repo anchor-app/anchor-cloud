@@ -23,9 +23,30 @@ Parse.Cloud.define('sync', function (req, res) {
       promises.push(Contacts.asyncUpdateOrCreateContact(fullContact));
     };
 
-    return Parse.Promise.when(promises);
-  }).then(function() {
-    res.success("Synced some contacts.");
+    return Parse.Promise.when(promises).then(function() {
+      // We successfully synced some contacts. Grab the final etag and use that
+      // as future cursors.
+      if (fullContacts.length > 0) {
+        let etag = fullContacts[fullContacts.length - 1].etag;
+        if (etag) {
+          user.set('fullContactLatestCursor', etag);
+          user.save(null, { sessionToken: user.get("sessionToken") });
+          console.log("Setting etag(" + etag + ") for user(" + user.get('username') + ").");
+        } else {
+          console.log("Couldn't find final etag.");
+        }
+      }
+
+      var message;
+      if (fullContacts.length == 0) {
+        message = "No more contacts to sync.";
+      } else {
+        message = "Synced " + fullContacts.length + " contact" + (fullContacts.length == 1 ? "." : "s.");
+      }
+      return message;
+    });
+  }).then(function(message) {
+    res.success(message);
   }, function(e) {
     res.error(e);
   });
