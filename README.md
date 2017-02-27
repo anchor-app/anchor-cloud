@@ -1,8 +1,6 @@
-> Your SashiDo appname is: `Carnegie Sandbox`
+# Anchor Cloud Code
 
-# How SashiDo & GitHub work together
-
-This is the private repo for your application. Let us explain in breif how the Cloud Code works on SashiDo:
+## General Organization
 
 ##### Developing of the Cloud Code
 
@@ -12,18 +10,7 @@ This is the private repo for your application. Let us explain in breif how the C
 
 `public/` is the directory in which you can put your `html`, `css`, `js`, `images` files, in case you want to host your app website on SashiDo for example :)
 
-
-##### Deploying to SashiDo
-
-When you `git push` changes to the `master` branch of this repo, SashiDo automatically deploys the code to the servers that your app is working on. However, you don't need any additional tools to manage and deploy your Cloud Code on SashiDo :)
-
-> Remember every push to the `master` branch triggers a deploy. If you want to push you changes without triggering of a deploy, you can push them to the `development` branch for example and when you are done with all the changes ... just merge with the `master` branch.
-
-##### Add collaborators to GitHub
-
-And of course if you want to add a collaborator to this repo, go to SashiDo's Dashboard and add it as an app collaborator and SashiDo will add it here automatically.
-
-# Test Advanced Cloud Code locally on your computer
+## Test Advanced Cloud Code locally on your computer
 
 In order to test your Cloud Code locally, instead of pushing every time to the SashiDo's cloud when you want to test some code changes, you are able to run similar to the SashiDo's production Parse Server on your local computer and you'll see the changes and results immediately :)
 
@@ -52,7 +39,7 @@ If you need to customize you local app settings you are able to do it with ENV V
 
 - `DATABASE_URI` Default: 'mongodb://localhost:27017/dev'
 - `APP_ID` Default: 'myAppId'
-- `MASTER_KEY` : Default: ''
+- `MASTER_KEY` : Default: '', but note that the Parse Dashboard code won't work with an empty MASTER_KEY
 - `SERVER_URL` : Default: http://localhost:1337/1'
 - `PORT` : Default: 1337
 
@@ -71,3 +58,11 @@ npm start
 ```
 
 That's it :) Happy coding :)
+
+### 6. Optionally run the Parse dashboard
+
+You might also want to use a local dashboard interface to interact w/ the data. Follow the instructions at https://www.appcoda.com/parse-migration-part3/, noting that the configuration parameters are listed at the bottom of the cloud code repo's README.md.
+
+Start the dashboard: node ./Parse-Dashboard/index.js --masterKey your_key --appId myAppId --serverURL http://localhost:1337/1
+
+Note it appears that the dashboard will not work with an empty master key. So start the local Parse instance w/ a `MASTER_KEY=...` environment variable set and update the dashboard config file.
