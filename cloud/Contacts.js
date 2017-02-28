@@ -4,7 +4,7 @@ var Contact = Parse.Object.extend("Contact");
 
 var Contacts = {};
 
-Contacts.asyncUpdateOrCreateContact = function(fullContactData) {
+Contacts.asyncUpdateOrCreateContact = function(user, fullContactData) {
   var promise = new Parse.Promise();
   var fullContact = new FullContact.Contact(fullContactData);
 
@@ -24,6 +24,14 @@ Contacts.asyncUpdateOrCreateContact = function(fullContactData) {
       // Need to create a new Contact model.
       anchorContact = new Contact();
       console.log("Creating new Contact with emails: " + emails);
+
+      var acl = new Parse.ACL(user);
+      let teamId = user.get('teamId');
+      if (teamId) {
+        acl.setRoleReadAccess(teamId, true);
+        acl.setRoleWriteAccess(teamId, true);
+      }
+      anchorContact.setACL(acl);
     }
     Contacts.updateContactWithFullContact(anchorContact, fullContact);
     anchorContact.save().then(function() {

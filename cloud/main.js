@@ -20,7 +20,7 @@ Parse.Cloud.define('sync', function (req, res) {
     var promises = [];
     for (let fullContact of fullContacts) {
       // Create/update Anchor's model with the FullContact data.
-      promises.push(Contacts.asyncUpdateOrCreateContact(fullContact));
+      promises.push(Contacts.asyncUpdateOrCreateContact(user, fullContact));
     };
 
     return Parse.Promise.when(promises).then(function() {
