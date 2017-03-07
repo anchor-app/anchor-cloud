@@ -13,7 +13,7 @@ Contacts.asyncUpdateOrCreateContact = function(user, fullContactData) {
 
   var query = new Parse.Query('Contact');
   query.equalTo('emails', emails[0]);
-  query.find().then(function(results) {
+  query.find({ 'sessionToken': user.getSessionToken() }).then(function(results) {
     var anchorContact;
     if (results.length == 1) {
       anchorContact = results[0];
