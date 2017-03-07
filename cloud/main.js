@@ -51,3 +51,10 @@ Parse.Cloud.define('sync', function (req, res) {
     res.error(e);
   });
 });
+
+Parse.Cloud.afterSave("Contact", function(request) {
+  var anchorContact = request.object;
+
+  // After saving, update the index we use to search for contacts.
+  SearchContactIndex.createIndexesForContact(anchorContact);
+});
