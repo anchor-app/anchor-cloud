@@ -1,5 +1,59 @@
 var FullContact = require('./FullContact');
 var Contacts = require('./Contacts');
+var SearchContactIndex = require('./SearchContactIndex');
+
+/**
+ Search for contacts by email and name.
+ Takes on argument in the query string, q, which is the string to search for. We
+ split that string by spaces and @ and find all contacts with text that begins
+ with those values.
+
+ Returns at most 100 tuples of { contactId, fullName }
+ */
+Parse.Cloud.define('searchContacts', function (req, res) {
+  let q = req.params.q;
+  let user = req.user;
+
+  var pieces = q.trim().replace('@', ' ').replace('.', ' ').replace('-', ' ').split(' ');
+  var queries = [];
+  for (var p of pieces) {
+    if (p.length == 0) {
+      continue;
+    }
+    var queryPiece = new Parse.Query('SearchContactIndex');
+    queryPiece.startsWith('text', p);
+    queries.push(queryPiece);
+  }
+  // Don't try any queries with no items.
+  if (queries.length == 0) {
+    res.success([]);
+    return;
+  }
+
+  var query = new Parse.Query('SearchContactIndex');
+  query._orQuery(queries);
+
+  query.find({ 'sessionToken': user.getSessionToken() }).then(function(indexes) {
+    var results = [];
+    var contactIdSet = new Set();
+
+    // There can be duplicate contactId, fullName pairs in the results,
+    // dedup them.
+    for (var i of indexes) {
+      if (!contactIdSet.has(i.get('contactId'))) {
+        results.push({
+          'contactId': i.get('contactId'),
+          'fullName': i.get('fullName')
+        });
+        contactIdSet.add(i.get('contactId'));
+      }
+    }
+
+    res.success(results);
+  }, function(error) {
+    res.error(error);
+  });
+});
 
 /**
  * Sync the FullContact contacts with our Contact objects, for the current user.
