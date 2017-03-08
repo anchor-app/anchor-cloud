@@ -2,11 +2,11 @@
 
 ## General Organization
 
-##### Developing of the Cloud Code
+##### Developing Cloud Code
 
-`./cloud/main.js` is the root file which we import on SashiDo's cloud. **Don't change the name**, if you want to run it. There are few simple examples there, so take a look of them :)
+`./cloud/main.js` is the root file which we import on SashiDo's cloud. **Don't change the name**.
 
-##### Hosting your website
+##### Hosting a Website
 
 `public/` is the directory in which you can put your `html`, `css`, `js`, `images` files, in case you want to host your app website on SashiDo for example :)
 
@@ -24,6 +24,11 @@ The required version of `NodeJS` is `>=4.3`
 ### 2. Install and run MongoDB
 
 - https://docs.mongodb.com/manual/installation/
+
+You probably end up running it with:
+```
+mongod --dbpath <wherever your dbpath is>
+```
 
 ### 3. Install your `npm` dependencies
 
@@ -59,10 +64,13 @@ npm start
 
 That's it :) Happy coding :)
 
-### 6. Optionally run the Parse dashboard
+### 6. Set up Parse Dashboard
 
-You might also want to use a local dashboard interface to interact w/ the data. Follow the instructions at https://www.appcoda.com/parse-migration-part3/, noting that the configuration parameters are listed at the bottom of the cloud code repo's README.md.
+You probably want to use Parse Dashboard, which is a GUI for interacting w/ a Parse server, including database introspection and an API console for easy access to the API.
 
-Start the dashboard: node ./Parse-Dashboard/index.js --masterKey your_key --appId myAppId --serverURL http://localhost:1337/1
+Follow the instructions at https://www.appcoda.com/parse-migration-part3/, noting that the configuration parameters are listed above. **Remember** that the dashboard doesn't work with the default empty `MASTER_KEY`.
 
-Note it appears that the dashboard will not work with an empty master key. So start the local Parse instance w/ a `MASTER_KEY=...` environment variable set and update the dashboard config file.
+Start the dashboard with this, once inside the dashboard directory:
+```
+node ./Parse-Dashboard/index.js --masterKey <your chosen master key> --appId myAppId --serverURL http://localhost:1337/1
+```
