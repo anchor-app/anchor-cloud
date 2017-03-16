@@ -74,3 +74,13 @@ Start the dashboard with this, once inside the dashboard directory:
 ```
 node ./Parse-Dashboard/index.js --masterKey <your chosen master key> --appId myAppId --serverURL http://localhost:1337/1
 ```
+
+## Pushing to Production
+Production is a different repo. To push this repo to the prod repo, first add prod as a remote target in git:
+```
+git remote add prod https://github.com/parsegroundapps/pg-app-8hnin3szjcye8hhjecih9pxrjckzb2.git
+```
+You only have to do this once. Then, to push to production:
+```
+git push prod master
+```
